@@ -1,0 +1,10 @@
+Key,Text
+LANGUAGE_OPTION_en,English
+LANGUAGE_OPTION_de,German
+LANGUAGE_OPTION_rs,Serbian
+
+settings_audio_master,Master
+settings_audio_music,Music
+settings_audio_sfx,SFX
+settings_audio_dialogue,Dialogue
+settings_language_title,Language

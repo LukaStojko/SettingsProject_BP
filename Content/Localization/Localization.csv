@@ -1,0 +1,10 @@
+Key,en,de,rs
+LANGUAGE_OPTION_en,English,Englisch,Engleski
+LANGUAGE_OPTION_de,German,Deutsch,Nemački
+LANGUAGE_OPTION_rs,Serbian,Serbisch,Srpski
+
+settings_audio_master,Master,Master,Glavni Zvuk
+settings_audio_music,Music,Musik,Muzika
+settings_audio_sfx,SFX,Effekte,Efekti
+settings_audio_dialogue,Dialogue,Dialog,Dijalog
+settings_language_title,Language,Sprache,Jezik
