@@ -6,6 +6,7 @@
 #include "Sound/SoundMix.h"
 #include "Sound/SoundClass.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "LocalizationSettingsCustom.h"
 
 #include "PlayerSettingsSave.h"
 
@@ -69,6 +70,9 @@ public:
     float GetMouseSensitivity() const;
 
     //LOCALIZATION
+    UPROPERTY(BlueprintAssignable)
+    FOnLanguageChanged OnLanguageChanged;
+
     // Change current language ("en", "fr", etc)
     UFUNCTION(BlueprintCallable)
     void SetLanguage(const FString& CultureCode);
@@ -81,8 +85,6 @@ public:
     UFUNCTION(BlueprintCallable)
     FString GetLocalizedText(const FString& Key) const;
 
-    UPROPERTY(BlueprintAssignable)
-    FOnLanguageChanged OnLanguageChanged;
     UFUNCTION(BlueprintCallable)
     TArray<FString> GetAvailableLanguages() const;
 
@@ -93,9 +95,6 @@ private:
 
     void ApplyAudioSettings();
 
-    // CSV STORAGE
-    TMap<FString, FString> LocalizationData;
-
-    // CSV Loader
-    bool LoadLocalizationForLanguage(const FString& Language);
+    UPROPERTY()
+    ULocalizationSettingsCustom* Localization;
 };

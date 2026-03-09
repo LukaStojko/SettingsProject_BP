@@ -40,8 +40,13 @@ void USettingsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
         }
     }
 
-    LoadLocalizationForLanguage(Settings->Language);
+    Localization = NewObject<ULocalizationSettingsCustom>(this);
+    if (Localization && Settings)
+    {
+        Localization->Initialize(Settings->Language);
+    }
 	//SetLanguage(GetLanguage()); //set in BP after binding OnLanguageChanged
+
     ApplyAudioSettings();
 }
 
@@ -265,7 +270,8 @@ void USettingsSubsystem::SetLanguage(const FString& CultureCode)
 
     Settings->Language = CultureCode;
 
-    LoadLocalizationForLanguage(CultureCode);
+    //Localization->LoadLocalizationForLanguage(CultureCode);
+	Localization->SetLanguage(CultureCode);
 
     SaveSettings();
 
@@ -274,92 +280,15 @@ void USettingsSubsystem::SetLanguage(const FString& CultureCode)
 
 FString USettingsSubsystem::GetLanguage() const
 {
-    return Settings ? Settings->Language : TEXT("en");
+	return Localization->GetLanguage();
 }
 
 FString USettingsSubsystem::GetLocalizedText(const FString& Key) const
 {
-    const FString* Text = LocalizationData.Find(Key);
-
-    if (!Text)
-        return Key;
-
-    return *Text;
-}
-
-bool USettingsSubsystem::LoadLocalizationForLanguage(const FString& Language)
-{
-    LocalizationData.Empty();
-
-    FString LangPath =
-        FPaths::ProjectContentDir() +
-        TEXT("Localization/") +
-        Language +
-        TEXT("/");
-
-    IFileManager& FileManager = IFileManager::Get();
-
-    TArray<FString> CSVFiles;
-    FileManager.FindFiles(CSVFiles, *(LangPath + TEXT("*.csv")), true, false);
-
-    if (CSVFiles.Num() == 0)
-    {
-        UE_LOG(LogTemp, Error,
-            TEXT("No CSV files found for language %s"),
-            *Language);
-        return false;
-    }
-
-    for (const FString& File : CSVFiles)
-    {
-        FString FullPath = LangPath + File;
-
-        FString Content;
-        if (!FFileHelper::LoadFileToString(Content, *FullPath))
-        {
-            UE_LOG(LogTemp, Warning,
-                TEXT("Failed to load %s"),
-                *FullPath);
-            continue;
-        }
-
-        TArray<FString> Lines;
-        Content.ParseIntoArrayLines(Lines);
-
-        for (int32 i = 1; i < Lines.Num(); i++)
-        {
-            TArray<FString> Cells;
-            Lines[i].ParseIntoArray(Cells, TEXT(","));
-
-            if (Cells.Num() < 2)
-                continue;
-
-            LocalizationData.Add(Cells[0], Cells[1]);
-        }
-
-        UE_LOG(LogTemp, Warning,
-            TEXT("Loaded CSV: %s"),
-            *File);
-    }
-
-    UE_LOG(LogTemp, Warning,
-        TEXT("Localization entries loaded: %d"),
-        LocalizationData.Num());
-
-    return true;
+	return Localization->GetLocalizedText(Key);
 }
 
 TArray<FString> USettingsSubsystem::GetAvailableLanguages() const
 {
-    TArray<FString> Languages;
-
-    FString BasePath =
-        FPaths::ProjectContentDir() +
-        TEXT("Localization/");
-
-    IFileManager& FileManager = IFileManager::Get();
-
-    FileManager.FindFiles(Languages, *(BasePath + TEXT("*")), false, true);
-
-    return Languages;
+	return Localization->GetAvailableLanguages();
 }
