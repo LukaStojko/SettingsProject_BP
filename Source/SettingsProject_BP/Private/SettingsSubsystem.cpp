@@ -23,6 +23,12 @@ void USettingsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     {
         Audio->Initialize(Settings);
     }
+
+	Gameplay = NewObject<UGameplaySettingsCustom>(this);
+    if (Gameplay && Settings)
+    {
+        Gameplay->Initialize(Settings);
+    }
     
 	Localization = NewObject<ULocalizationSettingsCustom>(this);
     if(Localization && Settings)
@@ -58,16 +64,5 @@ void USettingsSubsystem::SaveSettings()
 //AUDIO
 
 //GAMEPLAY
-void USettingsSubsystem::SetMouseSensitivity(float Value)
-{
-    if (!Settings) return;
-
-    Settings->MouseSensitivity = Value;
-    SaveSettings();
-}
-float USettingsSubsystem::GetMouseSensitivity() const
-{
-    return Settings ? Settings->MouseSensitivity : 1.0f;
-}
 
 //LOCALIZATION

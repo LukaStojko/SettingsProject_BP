@@ -8,6 +8,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 
 #include "AudioSettingsCustom.h"
+#include "GameplaySettingsCustom.h"
 #include "LocalizationSettingsCustom.h"
 
 #include "PlayerSettingsSave.h"
@@ -37,9 +38,7 @@ public:
 
     // GAMEPLAY
     UFUNCTION(BlueprintCallable)
-    void SetMouseSensitivity(float Value);
-    UFUNCTION(BlueprintCallable)
-    float GetMouseSensitivity() const;
+    UGameplaySettingsCustom* GetGameplaySettings() const { return Gameplay; }
 
     //LOCALIZATION
     UFUNCTION(BlueprintCallable)
@@ -51,5 +50,6 @@ private:
     FString SaveSlot = TEXT("PlayerSettings");
 
     UAudioSettingsCustom* Audio;
+    UGameplaySettingsCustom* Gameplay;
 	ULocalizationSettingsCustom* Localization;
 };
